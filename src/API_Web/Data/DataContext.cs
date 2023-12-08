@@ -2,9 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 
-using utilisateur.Entities;
+using API_Web.Entities;
 
-namespace utilisateur.Data
+namespace API_Web.Data
 {
     public class DataContext : DbContext
     {

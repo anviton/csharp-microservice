@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using API_Web.Data;
+using API_Web.Entities;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SQLitePCL;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -6,35 +10,87 @@ namespace API_Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class UtilisateurController : ControllerBase
     {
-        // GET: api/<ValuesController>
+        private DataContext _context;
+
+        public UtilisateurController(DataContext context)
+        {
+            _context = context;
+        }
+
+        // GET: api/<UtilisateurController>
+
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult<IEnumerable<Utilisateur>>> GetUtilisateur()
         {
-            return new string[] { "value1", "value2" };
+            return Ok(await _context.Utilisateurs.ToListAsync());
         }
 
-        // GET api/<ValuesController>/5
+        // GET api/<UtilisateurController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<Utilisateur>> Get(int id)
         {
-            return "value";
-        }
+            try
+            {
+                // Récupération de l'utilisateur via le _context de manière asynchrone
+                var utilisateur = await _context.Utilisateurs.FindAsync(id);
 
-        // POST api/<ValuesController>
+                // Vérification si l'utilisateur existe
+                if (utilisateur == null)
+                {
+                    // Retourne une réponse NotFound si l'utilisateur n'est pas trouvé
+                    return NotFound($"Utilisateur avec l'ID {id} non trouvé");
+                }
+
+                // Retourne l'utilisateur trouvé
+                return Ok(utilisateur);
+            }
+            catch (Exception ex)
+            {
+                // Gestion des exceptions (log, retour d'une erreur générique, etc.)
+                return StatusCode(500, $"Erreur lors de la récupération de l'utilisateur : {ex.Message}");
+            }
+        }
+ 
+
+        // POST api/<UtilisateurController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult<Utilisateur>> PostUtilisateur(Utilisateur utilisateur)
         {
+            _context.Utilisateurs.Add(utilisateur);
+
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetUtilisateur), new { id = utilisateur.Id }, utilisateur);
         }
 
-        // PUT api/<ValuesController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        // POST api/<UtilisateurController>/login
+        [HttpPost("login")]
+        public async Task<IActionResult> Post(int log, [FromBody] string pass)
         {
+            // Use LINQ to query the database
+            var utilisateur = await _context.Utilisateurs
+                .Where(u => u.Id == log && u.Pass == pass)
+                .FirstOrDefaultAsync();
+
+            if (utilisateur == null)
+            {
+                // User not found or password incorrect
+                return BadRequest("Invalid credentials");
+            }
+
+            // Authentication successful
+            // You can perform additional actions or return a success response
+            return Ok("Authentication successful");
         }
 
-        // DELETE api/<ValuesController>/5
+        /*
+         * Implémente une fonction qui sera accessible en POST sur l'URL </login> du controller
+         * Elle prendra en paramètre l'identifiant de l'utilisateur ainsi que le pass.
+         * Utilise FirstOrDefaultAsync et regarde comment on fait une query LINQ*/
+
+        // DELETE api/<UtilisateurController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
