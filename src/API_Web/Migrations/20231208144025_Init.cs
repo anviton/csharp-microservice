@@ -26,18 +26,6 @@ namespace API_Web.Migrations
                     table.PrimaryKey("PK_Utilisateurs", x => x.Id);
                 });
 
-            migrationBuilder.CreateTable(
-               name: "__EFMigrationsHistory",
-               columns: table => new
-               {
-                   MigrationId = table.Column<string>(nullable: false),
-                   ProductVersion = table.Column<string>(nullable: false)
-               },
-               constraints: table =>
-               {
-                   table.PrimaryKey("PK___EFMigrationsHistory", x => x.MigrationId);
-               });
-
         }
 
         /// <inheritdoc />
