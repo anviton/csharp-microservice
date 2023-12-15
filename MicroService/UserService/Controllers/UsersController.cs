@@ -93,14 +93,14 @@ namespace UserService.Controllers
 
         // POST: api/Users/register
         [HttpPost("register")]
-        public async Task<ActionResult<User>> CreateUser(UserCreateModel userPayload)
+        public async Task<ActionResult<User>> CreateUser(UserRegister userPayload)
         {
             var user = new User
             {
                 Email = userPayload.Email,
                 Name = userPayload.Name,
             };
-            user.PasswordHash = _passwordHasher.HashPassword(user, userPayload.Password);
+            user.PasswordHash = _passwordHasher.HashPassword(user, userPayload.Pass);
 
             _context.User.Add(user);
             await _context.SaveChangesAsync();
