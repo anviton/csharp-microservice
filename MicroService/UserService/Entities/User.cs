@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json.Linq;
+using System.ComponentModel.DataAnnotations;
 
 namespace UserService.Entities
 {
@@ -24,10 +25,14 @@ namespace UserService.Entities
         public string? Email { get; set; }
     }
 
-    public class UserCreateModel
+    public class UserRegister
     {
-        public required string Password { get; set; }
+        [RegularExpression(@"^[a-zA-Z0-9]*$", ErrorMessage = "Le nom d'utilisateur ne peut contenir que des caractères alphanumériques.")]
         public required string Name { get; set; }
+
+        [RegularExpression("^[a-zA-Z0-9]*$", ErrorMessage = "Le mot de passe ne peut contenir que des caractères alphanumériques.")]
+        public required string Pass { get; set; }
+        [EmailAddress(ErrorMessage = "Le format de l'adresse email est incorrect.")]
         public required string Email { get; set; }
     }
 

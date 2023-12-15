@@ -1,4 +1,4 @@
-namespace TaskService.Entities
+﻿namespace GatewayService.Entities
 {
     public class Task
     {

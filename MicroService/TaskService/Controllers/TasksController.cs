@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TaskService.Entities;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -32,17 +33,23 @@ namespace TaskService.Controllers
             return _tasks.Find(t => t.Id == id);
         }
 
-        // POST api/Tasks
-        [HttpPost]
-        public void CreateTask(TaskCreate task)
+        // POST api/Tasks/create
+        [HttpPost("create")]
+        public async Task<ActionResult<Entities.Task>> CreateTask(TaskCreate taskPayload)
         {
+
+
             var index = _taskIndex++;
-            _tasks.Add(new Entities.Task
+            var myTask = new Entities.Task
             {
                 Id = index,
-                IsDone = task.IsDone,
-                Text = task.Text
-            });
+                IsDone = taskPayload.IsDone,
+                Text = taskPayload.Text
+            };
+            _tasks.Add(myTask);
+
+            return CreatedAtAction("Get", new { id = index }, myTask);
+
         }
 
         // PUT api/Tasks/5
