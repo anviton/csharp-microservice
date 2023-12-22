@@ -36,7 +36,6 @@ namespace TaskService.Controllers
         }
 
         // POST api/Tasks/create
-        //faut il laisser async et ce retour ?
         [HttpPost("create")]
         public ActionResult<Entities.Task> CreateTask(TaskCreate taskPayload)
         {
@@ -53,8 +52,8 @@ namespace TaskService.Controllers
             return CreatedAtAction("Get", new { id = index }, myTask);
         }
 
-        // PUT api/Tasks/5
-        [HttpPut("{id}")]
+        // PUT api/Tasks/update/5
+        [HttpPut("update/{id}")]
         public ActionResult<Entities.Task> Put(int id, TaskCreate taskUpdate)
         {
             var task = _tasks.Tasks.Find(t => t.Id == id);
