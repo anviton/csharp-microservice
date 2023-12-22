@@ -6,7 +6,7 @@ using System.Net;
 /**
  * quand je create depuis swagger de la gateway
  * je vois rien quand je get depuis swagger de TaskService
-
+**/
 namespace GatewayService.Controllers
 {
     [Route("api/[controller]")]
@@ -48,6 +48,35 @@ namespace GatewayService.Controllers
             }
         }
 
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            // Create an HttpClient instance using the factory
+            using (var client = _httpClientFactory.CreateClient())
+            {
+                // Set the base address of the API you want to call
+                client.BaseAddress = new System.Uri("http://localhost:5002/");
+
+                // Send a POST request to the login endpoint
+                HttpResponseMessage response = await client.DeleteAsync("api/Tasks/delete/" + id);
+
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    return Ok();
+                }
+                else if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    // Task with the specified ID was not found
+                    return NotFound();
+                }
+                else
+                {
+                    return BadRequest("Delete failed");
+                }
+            }
+        }
+
         
     }
 }
+    

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskService.Entities;
+using TaskService.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -11,52 +12,52 @@ namespace TaskService.Controllers
     public class TasksController : ControllerBase
     {
 
-        private List<Entities.Task> _tasks;
-        private int _taskIndex = 0;
+        private TaskDB _tasks;
+        //private int _taskIndex = 0;
 
-        public TasksController()
+        public TasksController(TaskDB taskDB)
         {
-            _tasks = new List<Entities.Task>();
+            _tasks = taskDB;
+            //_tasks = new List<Entities.Task>();
         }
 
         // GET: api/Tasks
         [HttpGet]
         public IEnumerable<Entities.Task> Get()
         {
-            return _tasks;
+            return _tasks.Tasks;
         }
 
         // GET api/Tasks/5
         [HttpGet("{id}")]
         public Entities.Task? Get(int id)
         {
-            return _tasks.Find(t => t.Id == id);
+            return _tasks.Tasks.Find(t => t.Id == id);
         }
 
         // POST api/Tasks/create
+        //faut il laisser async et ce retour ?
         [HttpPost("create")]
-        public async Task<ActionResult<Entities.Task>> CreateTask(TaskCreate taskPayload)
+        public ActionResult<Entities.Task> CreateTask(TaskCreate taskPayload)
         {
-
-
-            var index = _taskIndex++;
+            var index = _tasks.taskIndex;
+            _tasks.taskIndex++;
             var myTask = new Entities.Task
             {
                 Id = index,
                 IsDone = taskPayload.IsDone,
                 Text = taskPayload.Text
             };
-            _tasks.Add(myTask);
+            _tasks.Tasks.Add(myTask);
 
             return CreatedAtAction("Get", new { id = index }, myTask);
-
         }
 
         // PUT api/Tasks/5
         [HttpPut("{id}")]
         public ActionResult<Entities.Task> Put(int id, TaskCreate taskUpdate)
         {
-            var task = _tasks.Find(t => t.Id == id);
+            var task = _tasks.Tasks.Find(t => t.Id == id);
             if(task == null)
             {
                 return NotFound();
@@ -67,16 +68,16 @@ namespace TaskService.Controllers
             return Ok(task);
         }
 
-        // DELETE api/Tasks/5
-        [HttpDelete("{id}")]
+        // DELETE api/Tasks/delete/5
+        [HttpDelete("delete/{id}")]
         public ActionResult<bool> Delete(int id)
         {
-            var index = _tasks.FindIndex(t => t.Id == id);
+            var index = _tasks.Tasks.FindIndex(t => t.Id == id);
             if(index == -1)
             {
                 return NotFound();
             }
-            _tasks.RemoveAt(index);
+            _tasks.Tasks.RemoveAt(index);
             return Ok(true);
         }
     }
