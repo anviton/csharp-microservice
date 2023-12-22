@@ -1,11 +1,12 @@
 ﻿using GatewayService.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
 /**
- * quand je create depuis swagger de la gateway
- * je vois rien quand je get depuis swagger de TaskService
+ * rajouter la gestion du jwt
+ * 
 **/
 namespace GatewayService.Controllers
 {
@@ -75,6 +76,9 @@ namespace GatewayService.Controllers
                 }
             }
         }
+
+        //[Authorize] // A décommenter quand le JWT sera en place
+        //dans le JWT on recupere l'user id
 
         [HttpGet]
         public async Task<IActionResult> Get()
