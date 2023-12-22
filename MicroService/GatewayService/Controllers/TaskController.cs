@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
-/**
+/*
  * quand je create depuis swagger de la gateway
- * je vois rien quand je get depuis swagger de TaskService
+ * je vois rien quand je get depuis swagger de TaskService*/
 
 namespace GatewayService.Controllers
 {

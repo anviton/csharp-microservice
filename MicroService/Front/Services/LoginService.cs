@@ -14,20 +14,34 @@ namespace Front.Services
 
         public LoginService(HttpClient httpClient)
         {
+            //_httpClient = new HttpClient();
             _httpClient = httpClient;
+            //_httpClient.BaseAddress = new System.Uri("http://localhost:5000/");
         }
 
         public async Task<UserDTO> AuthenticateUser(string username, string password)
         {
             UserLogin userLogin = new() { Name = username, Pass = password };
-            var response = await _httpClient.PostAsJsonAsync("/api/User/login", userLogin);
-            Console.WriteLine(response.StatusCode);
-            return new UserDTO
+            UserDTO result = null;
+            Console.WriteLine("TEST 1: ");
+            var response = await _httpClient.PostAsJsonAsync("http://localhost:5000/api/User/login", userLogin);
+            Console.WriteLine("TEST 2: ");    
+            Console.WriteLine(response.Content);
+
+            // Désérialiser la chaîne JSON en un objet approprié
+            if (response.IsSuccessStatusCode)
+            {
+                 result = await response.Content.ReadFromJsonAsync<UserDTO>();
+            }
+
+            /*return new UserDTO
             {
                 Id = 0,
                 Email = "test@test.fr",
-                Name = username,
-            };
+                Name = "test",
+            };*/
+
+            return result;
         }
     }
 }

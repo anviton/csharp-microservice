@@ -8,24 +8,30 @@
     <InputText @bind-Value="loginModel.Username" />
     <InputText @bind-Value="loginModel.Password" type="password" />
     <button type="submit">Login</button>
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <p class="text-danger">@errorMessage</p>
+    }
 </EditForm>
 
-@code {
+    @code {
     private LoginModel loginModel = new LoginModel();
-
+    private string errorMessage;
 
     private async void HandleLogin()
     {
-        var user = loginService.AuthenticateUser(loginModel.Username, loginModel.Password);
-        if (user.Result != null)
+        var user = await loginService.AuthenticateUser(loginModel.Username, loginModel.Password);
+        if (user != null)
         {
-            var userClaim = await ((CustomAuthenticationStateProvider)authStateProvider).MarkUserAsAuthenticated(user.Result);
+            var userClaim = await ((CustomAuthenticationStateProvider)authStateProvider).MarkUserAsAuthenticated(user);
 
             NavigationManager.NavigateTo("/");
         }
         else
         {
-            // Handle failed authentication
+            Console.WriteLine("Le User n'existe pas");
+            errorMessage = "Le User n'existe pas";
+            return;
         }
     }
 
