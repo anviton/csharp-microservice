@@ -1,6 +1,7 @@
 ﻿using TaskService.Controllers;
+using TaskService.Services;
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddSingleton<TaskDB>(); //passe dans constructeur du controller
 // Add services to the container.
 
 builder.Services.AddControllers();

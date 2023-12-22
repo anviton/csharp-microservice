@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using GatewayService.Entities; //pourquoi UserService et pas GatewayService
+using GatewayService.Entities;
+
+//TODO : ajouter put, get, delete...
+//pas forcement utile du point de vu des fonctionnalités mais bonne pratique
 
 namespace GatewayService.Controllers
 {
