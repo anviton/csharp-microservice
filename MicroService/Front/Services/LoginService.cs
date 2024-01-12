@@ -23,24 +23,13 @@ namespace Front.Services
         {
             UserLogin userLogin = new() { Name = username, Pass = password };
             UserDTO result = null;
-            Console.WriteLine("TEST 1: ");
             var response = await _httpClient.PostAsJsonAsync("http://localhost:5000/api/User/login", userLogin);
-            Console.WriteLine("TEST 2: ");    
-            Console.WriteLine(response.Content);
 
             // Désérialiser la chaîne JSON en un objet approprié
             if (response.IsSuccessStatusCode)
             {
                  result = await response.Content.ReadFromJsonAsync<UserDTO>();
             }
-
-            /*return new UserDTO
-            {
-                Id = 0,
-                Email = "test@test.fr",
-                Name = "test",
-            };*/
-
             return result;
         }
     }

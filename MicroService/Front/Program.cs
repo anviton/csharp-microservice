@@ -27,6 +27,8 @@ builder.Services.AddScoped<ProtectedLocalStorage>();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 builder.Services.AddScoped<LoginService>();
 
+// Ajout d'un nouveau service
+builder.Services.AddScoped<TaskService>();
 
 var app = builder.Build();
 

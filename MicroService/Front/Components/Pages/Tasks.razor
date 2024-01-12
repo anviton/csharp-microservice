@@ -1,0 +1,32 @@
+﻿@page "/tasks"
+@inject HttpClient Http
+@inject TaskService taskService
+
+<h3>Tasks</h3>
+
+@if (tasks == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (tasks.Count == 0)
+{
+    <p>No tasks found for this user.</p>
+}
+else
+{
+    <ul>
+        @foreach (var task in tasks)
+        {
+            <li>@task.Text - @(task.IsDone ? "Completed" : "Pending")</li>
+        }
+    </ul>
+}
+
+@code {
+    private List<TaskToDo> tasks;
+
+    protected override async Task OnInitializedAsync()
+    {
+        tasks = await taskService.GetTasks();
+    }
+}

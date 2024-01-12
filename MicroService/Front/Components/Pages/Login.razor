@@ -4,13 +4,25 @@
 @inject LoginService loginService
 @inject AuthenticationStateProvider authStateProvider
 
-<EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
-    <InputText @bind-Value="loginModel.Username" />
-    <InputText @bind-Value="loginModel.Password" type="password" />
-    <button type="submit">Login</button>
+<h1 class="mb-4">Se connecter</h1>
+
+<EditForm Model="@loginModel" OnValidSubmit="HandleLogin" class="needs-validation" novalidate>
+    <div class="mb-3 row">
+        <div class="col-4">
+            <InputText @bind-Value="loginModel.Username" class="form-control" placeholder="Nom d'utilisateur" />
+            <ValidationMessage For="@(() => loginModel.Username)" class="text-danger" />
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <div class="col-4">
+            <InputText @bind-Value="loginModel.Password" type="password" class="form-control" placeholder="Mot de passe" />
+            <ValidationMessage For="@(() => loginModel.Password)" class="text-danger" />
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Se connecter</button>
     @if (!string.IsNullOrEmpty(errorMessage))
     {
-        <p class="text-danger">@errorMessage</p>
+        <div class="text-danger mt-2">@errorMessage</div>
     }
 </EditForm>
 
@@ -29,8 +41,8 @@
         }
         else
         {
-            Console.WriteLine("Le User n'existe pas");
-            errorMessage = "Le User n'existe pas";
+            Console.WriteLine("L'utilisateur n'existe pas");
+            errorMessage = "L'utilisateur n'existe pas";
             return;
         }
     }
