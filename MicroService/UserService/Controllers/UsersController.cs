@@ -95,17 +95,25 @@ namespace UserService.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<User>> CreateUser(UserRegister userPayload)
         {
-            var user = new User
+            var user = await _context.User.FirstOrDefaultAsync(u => u.Name == userPayload.Name);
+            if (user == null)
             {
-                Email = userPayload.Email,
-                Name = userPayload.Name,
-            };
-            user.PasswordHash = _passwordHasher.HashPassword(user, userPayload.Pass);
+                user = new User
+                {
+                    Email = userPayload.Email,
+                    Name = userPayload.Name,
+                };
+                user.PasswordHash = _passwordHasher.HashPassword(user, userPayload.Pass);
 
-            _context.User.Add(user);
-            await _context.SaveChangesAsync();
+                _context.User.Add(user);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUser", new { id = user.Id }, user);
+                return CreatedAtAction("GetUser", new { id = user.Id }, user);
+            }
+            else
+            {
+                return new BadRequestResult();
+            }
         }
 
         // POST: api/Users/login

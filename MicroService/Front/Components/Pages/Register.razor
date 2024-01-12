@@ -1,4 +1,7 @@
 ﻿@page "/register"
+@inject ILogger<Register> Logger
+@inject NavigationManager NavigationManager
+@inject RegisterService registerService
 
 <!DOCTYPE html>
 <html lang="en">
@@ -53,18 +56,29 @@
 <body>
    <h1 class="mb-4">S'inscrire</h1>
     <div id="conteneurForm">
-        <form id="registrationForm" action="#" method="post">
+        <EditForm Model="@registerModel" OnSubmit="HandleRegister">
             <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
+            <InputText @bind-Value="registerModel.UserName" required />
 
             <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+            <InputText type="password" @bind-Value="registerModel.Password" required />
 
             <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+            <InputText type="email" @bind-Value="registerModel.Email" required />
+            <button type="submit">Register</button>
 
-            <button type="submit">Submit</button>
-        </form>
+        </EditForm>
+        @if (!string.IsNullOrEmpty(message))
+        {
+            if (erreur)
+            {
+                <p class="text-danger">@message</p>
+            }
+            else
+            {
+                <p class="text-black">@message</p>
+            }
+        }
     </div>
 
 </body>
@@ -72,6 +86,34 @@
 
 
 @code {
+    private RegisterModel registerModel = new RegisterModel();
+    private string message;
+    Boolean erreur = false;
 
+    private async void HandleRegister()
+    {
+        int user = await registerService.RegisterUser(registerModel.UserName, registerModel.Password, registerModel.Email);
+        if (user == 0)
+        {
+            //var userClaim = await ((CustomAuthenticationStateProvider)authStateProvider).MarkUserAsAuthenticated(user);
 
+            //NavigationManager.NavigateTo("/");
+            message = "User créé";
+        }
+        else
+        {
+            Console.WriteLine("Le User existe déjà");
+            message = "Le User existe déjà";
+            erreur = true;
+        }
+        StateHasChanged();
+        return;
+    }
+    private class RegisterModel
+    {
+        public string UserName { get; set; } = "";
+        public string Password { get; set; } = "";
+        public string Email { get; set; } = "";
+
+    }
 }
