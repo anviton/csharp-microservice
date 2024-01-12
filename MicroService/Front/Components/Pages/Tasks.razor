@@ -4,6 +4,10 @@
 
 <h3>Tasks</h3>
 
+<div class="mb-3">
+    <button class="btn btn-primary" @onclick="OnInitializedAsync">Refresh</button>
+</div>
+
 @if (tasks == null)
 {
     <p><em>Loading...</em></p>
@@ -17,10 +21,20 @@ else
     <ul>
         @foreach (var task in tasks)
         {
-            <li>@task.Text - @(task.IsDone ? "Completed" : "Pending")</li>
+            <li>
+                @if (task.IsDone)
+                {
+                    <span class="bi bi-check-circle" aria-hidden="true"></span> 
+                }
+                else
+                {
+                    <span class="bi bi-clock" aria-hidden="true"></span> 
+                }
+                <span>@task.Text</span>
+            </li>
         }
     </ul>
-}
+ }
 
 @code {
     private List<TaskToDo> tasks;
@@ -29,4 +43,6 @@ else
     {
         tasks = await taskService.GetTasks();
     }
+
+    private async Task RefreshTasks() => tasks = await taskService.GetTasks();
 }
