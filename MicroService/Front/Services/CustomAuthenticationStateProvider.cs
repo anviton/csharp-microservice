@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using System.Security.Claims;
-using System.Security.Principal;
 
 namespace Front.Services
 {
@@ -43,7 +42,7 @@ namespace Front.Services
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             var userSession = await _sessionStorage.GetAsync<UserDTO>("User");
-            if(userSession.Success && userSession.Value != null)
+            if (userSession.Success && userSession.Value != null)
             {
                 var user = userSession.Value;
                 var claims = new[] {
@@ -52,7 +51,9 @@ namespace Front.Services
                 };
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 _currentUser = new ClaimsPrincipal(identity);
-            } else {
+            }
+            else
+            {
                 _currentUser = new ClaimsPrincipal(new ClaimsIdentity());
             }
             return await Task.FromResult(new AuthenticationState(_currentUser));

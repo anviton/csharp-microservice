@@ -16,12 +16,8 @@ namespace Front.Services
         public async Task<int> RegisterUser(string username, string password, string email)
         {
             UserRegister userRegister = new() { Name = username, Pass = password, Email = email };
-            //UserDTO result = null;
             int result = 1;
-            Console.WriteLine("TEST 1: ");
             var response = await _httpClient.PostAsJsonAsync("http://localhost:5000/api/User/register", userRegister);
-            Console.WriteLine("TEST 2: ");
-            Console.WriteLine(response.Content);
 
             // Désérialiser la chaîne JSON en un objet approprié
             if (response.IsSuccessStatusCode)
@@ -29,13 +25,6 @@ namespace Front.Services
                 //result = await response.Content.ReadFromJsonAsync<UserDTO>();
                 result = 0;
             }
-
-            /*return new UserDTO
-            {
-                Id = 0,
-                Email = "test@test.fr",
-                Name = "test",
-            };*/
 
             return result;
         }

@@ -12,11 +12,13 @@ builder.Services.AddRazorComponents()
 
 
 builder.Services
-    .AddAuthentication(options => {
+    .AddAuthentication(options =>
+    {
         options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme; ;
         options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     })
-    .AddCookie(options => {
+    .AddCookie(options =>
+    {
         options.LoginPath = "/login";
         options.ExpireTimeSpan = TimeSpan.FromMinutes(6000);
     });

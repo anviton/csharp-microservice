@@ -17,7 +17,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
         }
 
         form {
@@ -68,6 +67,9 @@
             <button type="submit">Register</button>
 
         </EditForm>
+    </div>
+    <br />
+    <div>
         @if (!string.IsNullOrEmpty(message))
         {
             if (erreur)

@@ -1,10 +1,4 @@
 ﻿using Front.Entities;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Routing.Tree;
-using System.ComponentModel.DataAnnotations;
-using System.Net.Http;
-using System.Security.Claims;
 
 namespace Front.Services
 {
@@ -28,7 +22,7 @@ namespace Front.Services
             // Désérialiser la chaîne JSON en un objet approprié
             if (response.IsSuccessStatusCode)
             {
-                 result = await response.Content.ReadFromJsonAsync<UserDTO>();
+                result = await response.Content.ReadFromJsonAsync<UserDTO>();
             }
             return result;
         }

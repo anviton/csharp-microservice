@@ -4,10 +4,6 @@
 
 <h3>Tasks</h3>
 
-<div class="mb-3">
-    <button class="btn btn-primary" @onclick="OnInitializedAsync">Refresh</button>
-</div>
-
 @if (tasks == null)
 {
     <p><em>Loading...</em></p>
@@ -22,27 +18,56 @@ else
         @foreach (var task in tasks)
         {
             <li>
+                <span>@task.Text</span> -
+
                 @if (task.IsDone)
                 {
-                    <span class="bi bi-check-circle" aria-hidden="true"></span> 
+                    <img src="https://zupimages.net/up/24/03/w5q0.jpg" alt="Task Completed" width="30" height="30"/>
                 }
                 else
                 {
-                    <span class="bi bi-clock" aria-hidden="true"></span> 
+                    <img src="https://zupimages.net/up/24/03/sajj.jpg" alt="Task Uncompleted" width="30" height="30"/>
                 }
-                <span>@task.Text</span>
             </li>
         }
     </ul>
  }
 
+
+
+<div class="mb-3">
+    <button class="btn btn-primary" @onclick="RefreshTasks">Refresh</button>
+</div>
+
+
 @code {
     private List<TaskToDo> tasks;
+    private string errorMessage;
 
     protected override async Task OnInitializedAsync()
     {
-        tasks = await taskService.GetTasks();
+        try
+        {
+            tasks = await taskService.GetTasks();
+            errorMessage = null;
+        }
+        catch (Exception ex)
+        {
+            tasks = null; 
+            errorMessage = "Unable to fetch tasks. Please try again later."; 
+        }
     }
 
-    private async Task RefreshTasks() => tasks = await taskService.GetTasks();
+    private async Task RefreshTasks()
+    {
+        try
+        {
+            tasks = await taskService.GetTasks();
+            errorMessage = null; 
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Unable to fetch tasks. Please try again later.";
+        }
+    }
 }
