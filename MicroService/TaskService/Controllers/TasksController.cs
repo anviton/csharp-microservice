@@ -21,23 +21,30 @@ namespace TaskService.Controllers
             //_tasks = new List<Entities.Task>();
         }
 
-        // GET: api/Tasks
-        [HttpGet]
-        public IEnumerable<Entities.Task> Get()
-        {
-            return _tasks.Tasks;
-        }
+        // GET api/Tasks/5
+        //[HttpGet("{userId}")]
+        ////probleme swagger : retourne juste une tache 
+        //public Entities.Task? Get(int userId)
+        //{
+        //    return _tasks.Tasks.Find(t => t.userId == userId);
+        //}
 
         // GET api/Tasks/5
-        [HttpGet("{id}")]
-        public Entities.Task? Get(int id)
-        {
-            return _tasks.Tasks.Find(t => t.Id == id);
+        [HttpGet("{userId}")]
+        public ActionResult<Entities.Task> Get(int userId)
+        {   
+            List<Entities.Task> tasks = _tasks.Tasks.FindAll(t => t.userId == userId);
+            if(tasks == null)
+            {
+                return NotFound();
+            }
+            return Ok(tasks);
         }
 
+
         // POST api/Tasks/create
-        [HttpPost("create")]
-        public ActionResult<Entities.Task> CreateTask(TaskCreate taskPayload)
+        [HttpPost("create/{uid}")]
+        public ActionResult<Entities.Task> CreateTask(TaskCreate taskPayload, int uid)
         {
             var index = _tasks.taskIndex;
             _tasks.taskIndex++;
@@ -45,11 +52,13 @@ namespace TaskService.Controllers
             {
                 Id = index,
                 IsDone = taskPayload.IsDone,
-                Text = taskPayload.Text
+                Text = taskPayload.Text,
+                userId = uid
             };
             _tasks.Tasks.Add(myTask);
 
-            return CreatedAtAction("Get", new { id = index }, myTask);
+            //return CreatedAtAction("Get", new { userId = index }, myTask);
+            return Ok(myTask);
         }
 
         // PUT api/Tasks/update/5

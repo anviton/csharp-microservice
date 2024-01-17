@@ -31,6 +31,7 @@ builder.Services
         };
     });
 
+//todo : changer secret key au dessus
 builder.Services.AddSwaggerGen(option => {
     option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
     {
