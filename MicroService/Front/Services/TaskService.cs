@@ -14,7 +14,7 @@ namespace Front.Services
         public async Task<List<TaskToDo>> GetTasks()
         {
             List<TaskToDo> tasks = null;
-            var response = await _httpClient.GetFromJsonAsync<List<TaskToDo>>("http://localhost:5002/api/Tasks");
+            var response = await _httpClient.GetFromJsonAsync<List<TaskToDo>>("http://localhost:5000/api/Tasks");
             if (response != null)
             {
                 tasks = response.ToList();

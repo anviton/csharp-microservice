@@ -4,7 +4,11 @@
 
 <h3>Tasks</h3>
 
-@if (tasks == null)
+@if (errorMessage != null)
+{
+    <p class="text-danger">@errorMessage</p>
+}
+else if (tasks == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -22,22 +26,21 @@ else
 
                 @if (task.IsDone)
                 {
-                    <img src="https://zupimages.net/up/24/03/w5q0.jpg" alt="Task Completed" width="30" height="30"/>
+                    <img src="https://zupimages.net/up/24/03/w5q0.jpg" alt="Task Completed" width="30" height="30" />
                 }
                 else
                 {
-                    <img src="https://zupimages.net/up/24/03/sajj.jpg" alt="Task Uncompleted" width="30" height="30"/>
+                    <img src="https://zupimages.net/up/24/03/sajj.jpg" alt="Task Uncompleted" width="30" height="30" />
                 }
             </li>
         }
     </ul>
- }
-
-
+}
 
 <div class="mb-3">
     <button class="btn btn-primary" @onclick="RefreshTasks">Refresh</button>
 </div>
+
 
 
 @code {
@@ -67,6 +70,7 @@ else
         }
         catch (Exception ex)
         {
+            tasks = null;
             errorMessage = "Unable to fetch tasks. Please try again later.";
         }
     }

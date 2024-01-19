@@ -16,15 +16,15 @@ namespace Front.Services
         public async Task<UserDTO> AuthenticateUser(string username, string password)
         {
             UserLogin userLogin = new() { Name = username, Pass = password };
-            UserDTO result = null;
+            JWTAndUser result = null;
             var response = await _httpClient.PostAsJsonAsync("http://localhost:5000/api/User/login", userLogin);
 
             // Désérialiser la chaîne JSON en un objet approprié
             if (response.IsSuccessStatusCode)
             {
-                result = await response.Content.ReadFromJsonAsync<UserDTO>();
+                result = await response.Content.ReadFromJsonAsync<JWTAndUser>();
             }
-            return result;
+            return result.User;
         }
     }
 }

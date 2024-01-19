@@ -25,4 +25,12 @@ namespace Front.Entities
         [EmailAddress(ErrorMessage = "Le format de l'adresse email est incorrect.")]
         public required string Email { get; set; }
     }
+
+
+    public class JWTAndUser
+    {
+        public required string Token { get; set; }
+        public required UserDTO User { get; set; }
+    }
 }
+
