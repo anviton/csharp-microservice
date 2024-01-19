@@ -50,8 +50,8 @@ namespace TaskService.Controllers
             return Ok(myTask);
         }
 
-        // PUT api/Tasks/update/5
-        [HttpPut("update/{id}")]
+        // PUT api/Tasks/update/2/5
+        [HttpPut("update/{UserId}/{id}")]
         public ActionResult<Entities.Task> Put(int id, TaskCreate taskUpdate)
         {
             var task = _tasks.Tasks.Find(t => t.Id == id);
@@ -65,8 +65,8 @@ namespace TaskService.Controllers
             return Ok(task);
         }
 
-        // DELETE api/Tasks/delete/5
-        [HttpDelete("delete/{id}")]
+        // DELETE api/Tasks/delete/2/5
+        [HttpDelete("delete/{UserId}/{id}")]
         public ActionResult<bool> Delete(int id)
         {
             var index = _tasks.Tasks.FindIndex(t => t.Id == id);
