@@ -13,21 +13,11 @@ namespace TaskService.Controllers
     {
 
         private TaskDB _tasks;
-        //private int _taskIndex = 0;
 
         public TasksController(TaskDB taskDB)
         {
             _tasks = taskDB;
-            //_tasks = new List<Entities.Task>();
         }
-
-        // GET api/Tasks/5
-        //[HttpGet("{userId}")]
-        ////probleme swagger : retourne juste une tache 
-        //public Entities.Task? Get(int userId)
-        //{
-        //    return _tasks.Tasks.Find(t => t.userId == userId);
-        //}
 
         // GET api/Tasks/5
         [HttpGet("{userId}")]
@@ -57,7 +47,6 @@ namespace TaskService.Controllers
             };
             _tasks.Tasks.Add(myTask);
 
-            //return CreatedAtAction("Get", new { userId = index }, myTask);
             return Ok(myTask);
         }
 

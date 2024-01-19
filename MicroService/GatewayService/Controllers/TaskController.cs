@@ -23,7 +23,6 @@ namespace GatewayService.Controllers
         }
 
 
-        //pb erreur 400
         [HttpPost("create")]
         public async Task<IActionResult> Create(TaskCreate model)
         {
