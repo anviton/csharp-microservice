@@ -22,7 +22,7 @@ namespace GatewayService.Controllers
             _httpClientFactory = httpClientFactory;
         }
 
-
+        [Authorize]
         [HttpPost("create")]
         public async Task<IActionResult> Create(TaskCreate model)
         {
@@ -50,9 +50,12 @@ namespace GatewayService.Controllers
             }
         }
 
+        [Authorize]
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
+            var UserId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+            if (UserId == null) return Unauthorized();
             // Create an HttpClient instance using the factory
             using (var client = _httpClientFactory.CreateClient())
             {
@@ -60,9 +63,9 @@ namespace GatewayService.Controllers
                 client.BaseAddress = new System.Uri("http://localhost:5002/");
 
                 // Send a POST request to the login endpoint
-                HttpResponseMessage response = await client.DeleteAsync("api/Tasks/delete/" + id);
+                HttpResponseMessage response = await client.DeleteAsync($"api/Tasks/delete/{UserId}/{id}");
 
-                if (response.StatusCode == HttpStatusCode.OK)
+                if (response.IsSuccessStatusCode)
                 {
                     return Ok();
                 }
@@ -80,8 +83,6 @@ namespace GatewayService.Controllers
 
         [Authorize]
         [HttpGet]
-        //a gerer : associer une tache à un id utilisateur
-        //probleme swagger : unautorized
         public async Task<IActionResult> Get()
         {
             //avec userIdclaim on recupere l'id de l'utilisateur et on utilise pour trouver les taches associées
@@ -115,9 +116,13 @@ namespace GatewayService.Controllers
             }
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, TaskCreate model)
         {
+            var UserId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+            if (UserId == null) return Unauthorized();
+
             // Create an HttpClient instance using the factory
             using (var client = _httpClientFactory.CreateClient())
             {
@@ -125,13 +130,12 @@ namespace GatewayService.Controllers
                 client.BaseAddress = new System.Uri("http://localhost:5002/");
 
                 // Send a POST request to the login endpoint
-                HttpResponseMessage response = await client.PutAsJsonAsync("api/Tasks/update/" + id, model);
+                HttpResponseMessage response = await client.PutAsJsonAsync($"api/Tasks/update/{UserId}/{id}", model);
 
-                if (response.StatusCode == HttpStatusCode.OK)
+                if (response.IsSuccessStatusCode)
                 {
                     // You can deserialize the response content here if needed
-                    var result = await response.Content.ReadFromJsonAsync<TaskDTO>();
-                    return Ok(result);
+                    return Ok();
                 }
                 else if (response.StatusCode == HttpStatusCode.NotFound)
                 {
