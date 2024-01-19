@@ -4,8 +4,8 @@
 
 ### Sur le front:
 - Créer une page d'inscription - OK
-- Modifier le login pour que le front communique avec la gateway et appel la route de login
-- Faire que la page d'inscription appel la gateway
+- Modifier le login pour que le front communique avec la gateway et appel la route de login OK
+- Faire que la page d'inscription appel la gateway OK
 - Faire une page pour afficher un visuel de votre second micro service (liste de tâches)
 
 ### Sur la gateway:
@@ -23,14 +23,14 @@
 - Pouvoir mettre à jour un todo (EN COURS - reynalde)
 
 ### Sur la gateway:
-- Ajouter la gestion du JWT
-- Ajouter le JWT au swagger
-- Rendre certaines routes [Authorized]
-- Récupérer l'id de l'utilisateur sur les routes authentifiées
-- Transmettre l'id au micro service todo pour ne récupérer que les données concernant notre utilisateur
+- Ajouter la gestion du JWT (En COURS)
+- Ajouter le JWT au swagger OK
+- Rendre certaines routes [Authorized] OK
+- Récupérer l'id de l'utilisateur sur les routes authentifiées OK 
+- Transmettre l'id au micro service todo pour ne récupérer que les données concernant notre utilisateur OK
 
 ### Sur le micro service todo:
-- Ne renvoyer que les todo de notre utilisateur
+- Ne renvoyer que les todo de notre utilisateur OK
 - Créer une classe TodoDb qui contiendra la liste des todos - OK
 - Ajouter la classe TodoDb dans le program.cs en tant que singleton - OK
 - Utiliser cette classe dans le service todo - OK
