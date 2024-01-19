@@ -48,4 +48,10 @@ namespace UserService.Entities
         public required string Name { get; set; }
         public required string Pass { get; set; }
     }
+
+    public class JWTAndUser
+    {
+        public required string Token { get; set; }
+        public required UserDTO User { get; set; }
+    }
 }
