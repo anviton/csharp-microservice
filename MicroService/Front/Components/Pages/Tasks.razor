@@ -32,6 +32,8 @@ else
                 {
                     <img src="https://zupimages.net/up/24/03/sajj.jpg" alt="Task Uncompleted" width="30" height="30" />
                 }
+                <button class="btn btn-secondary btn-sm" @onclick="() => UpdateTaskStatus(task)">Update Status</button>
+                <button class="btn btn-danger btn-sm" @onclick="() => DeleteTask(task.Id)">Delete</button>
             </li>
         }
     </ul>
@@ -41,10 +43,15 @@ else
     <button class="btn btn-primary" @onclick="RefreshTasks">Refresh</button>
 </div>
 
+<div class="mb-3">
+    <input @bind="newTaskText" class="form-control" placeholder="Enter new task" />
+    <button class="btn btn-success mt-2" @onclick="AddTask">Add Task</button>
+</div>
 
 
 @code {
     private List<TaskToDo> tasks;
+    private string newTaskText;
     private string errorMessage;
 
     protected override async Task OnInitializedAsync()
@@ -72,6 +79,36 @@ else
         {
             tasks = null;
             errorMessage = "Unable to fetch tasks. Please try again later.";
+        }
+    }
+    private async Task UpdateTaskStatus(TaskToDo task)
+    {
+        task.IsDone = !task.IsDone;
+        await taskService.UpdateTask(task);
+        await RefreshTasks();
+    }
+
+    private async Task DeleteTask(int taskId)
+    {
+        await taskService.DeleteTask(taskId);
+        await RefreshTasks();
+    }
+
+    private async Task AddTask()
+    {
+        if (!string.IsNullOrWhiteSpace(newTaskText))
+        {
+            var newTask = new TaskToDo { Text = newTaskText, IsDone = false };
+            bool result = await taskService.AddTask(newTask);
+            if (result)
+            {
+                newTaskText = string.Empty;
+                await RefreshTasks();
+            }
+            else
+            {
+                errorMessage = "Failed to add the task.";
+            }
         }
     }
 }

@@ -22,60 +22,54 @@ namespace Front.Services
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwt.Value);
 
             List<TaskToDo> tasks = null;
+
             var response = await _httpClient.GetFromJsonAsync<List<TaskToDo>>("http://localhost:5000/api/Task/");
+
             if (response != null)
             {
                 tasks = response.ToList();
             }
+
             return tasks;
         }
 
-        // Méthode pour lister les tâches de l'utilisateur connecté
-        /*public async Task<List<TaskToDo>> GetTasksForUser(string userId)
-        {
-            var userTasks;
-
-            var allTasks = await GetTasks(); // Obtenir toutes les tâches
-
-            // Filtrer les tâches pour l'utilisateur spécifié (simulé ici)
-            // userTasks = allTasks.FindAll(task => task.UserId == userId);
-
-            return userTasks;
-        }*/
-
         // Méthode pour supprimer une tâche
-        public async Task<bool> DeleteTask(int taskId)
+        public async Task DeleteTask(int taskId)
         {
-            var allTasks = await GetTasks(); // Obtenir toutes les tâches
+            var jwt = await _storage.GetAsync<string>("jwt");
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwt.Value);
 
-            // Recherche de la tâche à supprimer par son ID (simulé ici)
-            var taskToDelete = allTasks.Find(task => task.Id == taskId);
+            List<TaskToDo> tasks = null;
 
-            if (taskToDelete != null)
+            HttpResponseMessage response = await _httpClient.DeleteAsync($"http://localhost:5000/api/Task/delete/{taskId}");
+
+            if (!response.IsSuccessStatusCode)
             {
-                allTasks.Remove(taskToDelete);
-                return true;
+                throw new Exception("Error on deleting a task.");
             }
-
-            return false;
         }
 
         // Méthode pour mettre à jour une tâche
         public async Task<bool> UpdateTask(TaskToDo updatedTask)
         {
-            var allTasks = await GetTasks(); // Obtenir toutes les tâches
+            var jwt = await _storage.GetAsync<string>("jwt");
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwt.Value);
 
-            // Recherche de la tâche à mettre à jour par son ID 
-            var taskToUpdate = allTasks.Find(task => task.Id == updatedTask.Id);
+            var response = await _httpClient.PutAsJsonAsync($"http://localhost:5000/api/Task/{updatedTask.Id}", updatedTask);
 
-            if (taskToUpdate != null)
-            {
-                // Mise à jour des propriétés de la tâche 
+            return response.IsSuccessStatusCode;
+        }
 
-                return true; // Indique que la mise à jour a réussi
-            }
 
-            return false;
+        // Ajout une tâche
+        public async Task<bool> AddTask(TaskToDo newTask)
+        {
+            var jwt = await _storage.GetAsync<string>("jwt");
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwt.Value);
+
+            var response = await _httpClient.PostAsJsonAsync("http://localhost:5000/api/Task/create", newTask);
+
+            return response.IsSuccessStatusCode;
         }
 
     }
