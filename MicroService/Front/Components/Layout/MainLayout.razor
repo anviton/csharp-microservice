@@ -11,11 +11,11 @@
         <div class="top-row px-4">
             <AuthorizeView>
                 <Authorized>
-                    <p>Welcome @context.User.Identity.Name </p>
+                    <span>Welcome @context.User.Identity.Name </span>
                     <a @onclick="Logout">Logout</a>
                 </Authorized>
                 <NotAuthorized>
-                    <p>You're not connected.</p>
+                    <span>You're not connected.</span>
                 </NotAuthorized>
             </AuthorizeView>
             
