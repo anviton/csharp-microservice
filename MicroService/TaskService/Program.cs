@@ -1,8 +1,18 @@
-﻿using TaskService.Controllers;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using TaskService.Controllers;
+using TaskService.Data;
 using TaskService.Services;
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddSingleton<TaskDB>(); //passe dans constructeur du controller
+
+builder.Services.AddDbContext<TaskServiceContext>(options =>
+options.UseSqlite(builder.Configuration.GetConnectionString("TaskServiceContext") ?? throw new InvalidOperationException("Connection string 'TaskServiceContext' not found.")));
+
+// builder.Services.AddSingleton<TaskDB>(); //passe dans constructeur du controller
 // Add services to the container.
+// BDD
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

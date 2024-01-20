@@ -11,11 +11,8 @@ namespace Front.Services
 
         public LoginService(HttpClient httpClient, ProtectedLocalStorage storage)
         {
-            //_httpClient = new HttpClient();
             _httpClient = httpClient;
             _storage = storage;
-            
-            //_httpClient.BaseAddress = new System.Uri("http://localhost:5000/");
         }
 
         public async Task<UserDTO> AuthenticateUser(string username, string password)
@@ -24,7 +21,6 @@ namespace Front.Services
             JWTAndUser result = null;
             var response = await _httpClient.PostAsJsonAsync("http://localhost:5000/api/User/login", userLogin);
 
-            // Désérialiser la chaîne JSON en un objet approprié
             if (response.IsSuccessStatusCode)
             {
                 result = await response.Content.ReadFromJsonAsync<JWTAndUser>();

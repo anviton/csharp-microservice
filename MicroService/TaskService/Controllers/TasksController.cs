@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TaskService.Data;
 using TaskService.Entities;
 using TaskService.Services;
 
@@ -12,70 +13,96 @@ namespace TaskService.Controllers
     public class TasksController : ControllerBase
     {
 
-        private TaskDB _tasks;
+        private TaskServiceContext _taskContext;
 
-        public TasksController(TaskDB taskDB)
+        public TasksController(TaskServiceContext taskContext)
         {
-            _tasks = taskDB;
+            _taskContext = taskContext;
         }
 
         // GET api/Tasks/5
         [HttpGet("{userId}")]
         public ActionResult<Entities.Task> Get(int userId)
-        {   
-            List<Entities.Task> tasks = _tasks.Tasks.FindAll(t => t.userId == userId);
+        {
+            List<Entities.Task> tasks = _taskContext.Task.Where(task => task.userId == userId).ToList();
+
             if(tasks == null)
             {
                 return NotFound();
             }
+
             return Ok(tasks);
         }
 
 
         // POST api/Tasks/create
         [HttpPost("create/{uid}")]
-        public ActionResult<Entities.Task> CreateTask(TaskCreate taskPayload, int uid)
+        public async Task<ActionResult<Entities.Task>> CreateTask(TaskCreate taskPayload, int uid)
         {
-            var index = _tasks.taskIndex;
-            _tasks.taskIndex++;
-            var myTask = new Entities.Task
+            try
             {
-                Id = index,
-                IsDone = taskPayload.IsDone,
-                Text = taskPayload.Text,
-                userId = uid
-            };
-            _tasks.Tasks.Add(myTask);
+                var newTask = new Entities.Task
+                {
+                    Text = taskPayload.Text,
+                    IsDone = taskPayload.IsDone,
+                    userId = uid
+                };
 
-            return Ok(myTask);
+                _taskContext.Add(newTask);
+                await _taskContext.SaveChangesAsync();
+
+                return Ok(newTask);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         // PUT api/Tasks/update/2/5
         [HttpPut("update/{UserId}/{id}")]
-        public ActionResult<Entities.Task> Put(int id, TaskCreate taskUpdate)
+        public async Task<ActionResult<Entities.Task>> Put(int id, TaskCreate taskUpdate)
         {
-            var task = _tasks.Tasks.Find(t => t.Id == id);
-            if(task == null)
+            try
             {
-                return NotFound();
-            }
-            task.Text = taskUpdate.Text;
-            task.IsDone = taskUpdate.IsDone;
+                var task = await _taskContext.Task.FindAsync(id);
 
-            return Ok(task);
+                if (task == null)
+                {
+                    return NotFound();
+                }
+
+                task.Text   = taskUpdate.Text;
+                task.IsDone = taskUpdate.IsDone;
+                await _taskContext.SaveChangesAsync();
+
+                return Ok(task);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
+
 
         // DELETE api/Tasks/delete/2/5
         [HttpDelete("delete/{UserId}/{id}")]
-        public ActionResult<bool> Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var index = _tasks.Tasks.FindIndex(t => t.Id == id);
-            if(index == -1)
+            var taskToRemove = _taskContext.Task.Where(task => task.Id == id).FirstOrDefault();
+
+            if(null != taskToRemove)
+            {
+                _taskContext.Remove(taskToRemove);
+                await _taskContext.SaveChangesAsync();
+
+                return NoContent();
+            }
+            else
             {
                 return NotFound();
             }
-            _tasks.Tasks.RemoveAt(index);
-            return Ok(true);
+           
         }
     }
 }

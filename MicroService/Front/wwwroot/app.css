@@ -20,6 +20,11 @@ a, .btn-link {
     padding-top: 1.1rem;
 }
 
+.updated-task-transition {
+    transition: background-color 0.5s ease; 
+}
+
+
 h1:focus {
     outline: none;
 }

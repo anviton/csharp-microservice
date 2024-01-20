@@ -6,7 +6,6 @@ using UserService.Entities;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<UserServiceContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("UserServiceContext") ?? throw new InvalidOperationException("Connection string 'UserServiceContext' not found.")));
-
 // Add services to the container.
 builder.Services.AddScoped<PasswordHasher<User>>();
 
