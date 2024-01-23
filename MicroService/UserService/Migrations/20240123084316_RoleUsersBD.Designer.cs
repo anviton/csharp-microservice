@@ -10,8 +10,8 @@ using UserService.Data;
 namespace UserService.Migrations
 {
     [DbContext(typeof(UserServiceContext))]
-    [Migration("20231214172812_Init")]
-    partial class Init
+    [Migration("20240123084316_RoleUsersBD")]
+    partial class RoleUsersBD
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,15 +26,15 @@ namespace UserService.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Role")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

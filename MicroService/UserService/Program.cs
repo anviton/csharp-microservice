@@ -1,11 +1,17 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using UserService;
 using UserService.Data;
 using UserService.Entities;
+
+
 var builder = WebApplication.CreateBuilder(args);
+
+// BDD
 builder.Services.AddDbContext<UserServiceContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("UserServiceContext") ?? throw new InvalidOperationException("Connection string 'UserServiceContext' not found.")));
+
 // Add services to the container.
 builder.Services.AddScoped<PasswordHasher<User>>();
 
@@ -28,3 +34,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+

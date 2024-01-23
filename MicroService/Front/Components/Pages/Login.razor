@@ -4,33 +4,39 @@
 @inject LoginService loginService
 @inject AuthenticationStateProvider authStateProvider
 
-<h1 class="mb-4">Se connecter</h1>
-
-<EditForm Model="@loginModel" OnValidSubmit="HandleLogin" class="needs-validation" novalidate>
-    <div class="mb-3 row">
-        <div class="col-4">
-            <InputText @bind-Value="loginModel.Username" class="form-control" placeholder="Nom d'utilisateur" />
-            <ValidationMessage For="@(() => loginModel.Username)" class="text-danger" />
+<!-- Login page -->
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-6 mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="card-title">Log in</h1>
+                    <EditForm Model="@loginModel" OnValidSubmit="HandleLogin" class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <InputText @bind-Value="loginModel.Username" class="form-control form-control-sm" placeholder="Username" />
+                            <ValidationMessage For="@(() => loginModel.Username)" class="text-danger" />
+                        </div>
+                        <div class="mb-3">
+                            <InputText @bind-Value="loginModel.Password" type="password" class="form-control form-control-sm" placeholder="Password" />
+                            <ValidationMessage For="@(() => loginModel.Password)" class="text-danger" />
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm">Log In</button>
+                        @if (!string.IsNullOrEmpty(errorMessage))
+                        {
+                            <div class="text-danger mt-2">@errorMessage</div>
+                        }
+                    </EditForm>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="mb-3 row">
-        <div class="col-4">
-            <InputText @bind-Value="loginModel.Password" type="password" class="form-control" placeholder="Mot de passe" />
-            <ValidationMessage For="@(() => loginModel.Password)" class="text-danger" />
-        </div>
-    </div>
-    <button type="submit" class="btn btn-primary">Se connecter</button>
-    @if (!string.IsNullOrEmpty(errorMessage))
-    {
-        <div class="text-danger mt-2">@errorMessage</div>
-    }
-</EditForm>
+</div>
 
-    @code {
+@code {
     private LoginModel loginModel = new LoginModel();
     private string errorMessage;
 
-    private async void HandleLogin()
+    private async Task HandleLogin()
     {
         var user = await loginService.AuthenticateUser(loginModel.Username, loginModel.Password);
         if (user != null)
@@ -41,9 +47,7 @@
         }
         else
         {
-            Console.WriteLine("L'utilisateur n'existe pas");
-            errorMessage = "L'utilisateur n'existe pas";
-            return;
+            errorMessage = "The user does not exist.";
         }
     }
 

@@ -1,29 +1,111 @@
 ﻿@page "/"
 
-<PageTitle>Home - Todo App Service</PageTitle>
+@inject AuthenticationStateProvider AuthStateProvider
 
 <div class="container mt-5">
     <div class="row">
         <div class="col-lg-8 mx-auto text-center">
-            <h1 class="mb-4">Welcome to Todo App Service</h1>
+            <h1 class="display-4">Welcome to Todo App Service</h1>
             <p class="lead">
                 Organize your day with our task management application.
-                Here, you can easily plan and track your daily tasks for enhanced productivity.
+                Easily plan and track your daily tasks for enhanced productivity.
             </p>
         </div>
-        <br />
-        <ul>
-            <li>
-                <strong>Create Custom Task Lists:</strong>
-                <br />
-                You can create task lists that cater to your specific needs.
-            </li>
-            <br />
-            <li>
-                <strong>Track Your Progress:</strong>
-                <br /> Our application offers progress tracking features so you can see your achievements over time. It motivates you to maintain your productivity.
-            </li>
-        </ul>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-lg-8 mx-auto text-center">
+            <p class="lead">
+                @if (!userIsAuthenticated)
+                {
+                    <a href="/register" class="btn btn-primary btn-lg">Sign up now</a>
+                }
+            </p>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="h5 m-0">Create Custom Task Lists</h2>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        You can create task lists that cater to your specific needs.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h2 class="h5 m-0">Track your progress</h2>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        Our application offers the possibility to create, update, and delete completed (or not completed) tasks.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-lg-12">
+            <h2 class="h4">Key Features</h2>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-check-circle fa-3x text-success"></i>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Organize your time</h5>
+                    <p class="card-text">
+                        Organize your tasks efficiently and keep track of your progress.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-clock fa-3x text-primary"></i>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Time management</h5>
+                    <p class="card-text">
+                        Manage your time effectively with our task scheduling tools.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-share fa-3x text-info"></i>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Update your tasks</h5>
+                    <p class="card-text">
+                        In our app, you can easily update the status of your tasks.
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
+@code {
+    private bool userIsAuthenticated;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        userIsAuthenticated = authState.User.Identity.IsAuthenticated;
+    }
+}

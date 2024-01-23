@@ -16,6 +16,7 @@ namespace Front.Services
             _storage = storage;
         }
 
+        // Fetch the user's tasks from the server
         public async Task<List<TaskToDo>> GetTasks()
         {
             var jwt = await _storage.GetAsync<string>("jwt");
@@ -33,7 +34,7 @@ namespace Front.Services
             return tasks;
         }
 
-        // Méthode pour supprimer une tâche
+        // Method to delete a task
         public async Task DeleteTask(int taskId)
         {
             var jwt = await _storage.GetAsync<string>("jwt");
@@ -49,7 +50,7 @@ namespace Front.Services
             }
         }
 
-        // Méthode pour mettre à jour une tâche
+        // Method to update a task
         public async Task<bool> UpdateTask(TaskToDo updatedTask)
         {
             var jwt = await _storage.GetAsync<string>("jwt");
@@ -60,8 +61,7 @@ namespace Front.Services
             return response.IsSuccessStatusCode;
         }
 
-
-        // Ajout une tâche
+        // Add a new task
         public async Task<bool> AddTask(TaskToDo newTask)
         {
             var jwt = await _storage.GetAsync<string>("jwt");
@@ -71,6 +71,5 @@ namespace Front.Services
 
             return response.IsSuccessStatusCode;
         }
-
     }
 }

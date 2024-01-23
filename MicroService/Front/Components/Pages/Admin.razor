@@ -1,0 +1,50 @@
+﻿@page "/users"
+
+@inject UserService userService
+
+<h3>Users</h3>
+
+@if (users != null)
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in users)
+            {
+                <tr>
+                    <td>@user.Id</td>
+                    <td>@user.Name</td>
+                    <td>@user.Email</td>
+                    <td>@user.Role</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Aucun utilisateur trouvé.</p>
+}
+
+@code {
+    private List<UserDTO> users;
+
+    // Méthode pour récupérer les tâches au chargement de la page
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            users = await userService.GetUsersAsync();
+        }
+        catch (Exception ex)
+        {}
+    }
+
+}

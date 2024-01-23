@@ -16,6 +16,7 @@ namespace Front.Services
             _sessionStorage = protectedSessionStorage;
         }
 
+        // Mark the user as authenticated and store user information in session storage
         public async Task<ClaimsPrincipal> MarkUserAsAuthenticated(UserDTO user)
         {
             await _sessionStorage.SetAsync("User", user);
@@ -30,6 +31,8 @@ namespace Front.Services
 
             return _currentUser;
         }
+
+        // Logout the user and remove user information from session storage
         public async Task<ClaimsPrincipal> Logout()
         {
             await _sessionStorage.DeleteAsync("User");
@@ -39,16 +42,18 @@ namespace Front.Services
             return _currentUser;
         }
 
+        // Get the current authentication state
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             var userSession = await _sessionStorage.GetAsync<UserDTO>("User");
             if (userSession.Success && userSession.Value != null)
             {
                 var user = userSession.Value;
-                var claims = new[] {
+                var claims = new List<Claim>{
                     new Claim(ClaimTypes.Name, user.Name),
-                    new Claim(ClaimTypes.Role, "User")
+                    new Claim(ClaimTypes.Role, user.Role == "Admin" ? "Admin" : "Basic"),
                 };
+
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 _currentUser = new ClaimsPrincipal(identity);
             }

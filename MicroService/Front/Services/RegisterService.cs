@@ -11,6 +11,7 @@ namespace Front.Services
             _httpClient = httpClient;
         }
 
+        // Register a new user by sending a POST request to the registration API
         public async Task<int> RegisterUser(string username, string password, string email)
         {
             UserRegister userRegister = new() { Name = username, Pass = password, Email = email };

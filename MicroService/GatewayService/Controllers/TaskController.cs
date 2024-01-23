@@ -4,10 +4,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
-/**
- * rajouter la gestion du jwt
- * 
-**/
 namespace GatewayService.Controllers
 {
     [Route("api/[controller]")]

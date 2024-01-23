@@ -6,21 +6,21 @@
     <div class="sidebar">
         <NavMenu />
     </div>
-
     <main>
-        <div class="top-row px-4">
+        <div class="top-row px-4 d-flex justify-content-between align-items-center">
             <AuthorizeView>
                 <Authorized>
-                    <span>Welcome @context.User.Identity.Name </span>
-                    <a @onclick="Logout">Logout</a>
+                    <div class="d-flex align-items-center">
+                        <span class="badge rounded-pill bg-success me-2">Logged</span>
+                    </div>
+                    <span class="badge rounded-pill bg-primary">Logged as : @context.User.Identity.Name</span>
+                    <a class="ms-2" @onclick="Logout">Logout</a>
                 </Authorized>
                 <NotAuthorized>
-                    <span>You're not connected.</span>
+                    <span class="fw-bold fs-5 text-danger">You're not connected.</span>
                 </NotAuthorized>
             </AuthorizeView>
-            
         </div>
-
         <article class="content px-4">
             @Body
         </article>
@@ -38,9 +38,8 @@
     private async void Logout()
     {
         // Kill the session
-        await((CustomAuthenticationStateProvider)authStateProvider).Logout();
+        await ((CustomAuthenticationStateProvider)authStateProvider).Logout();
         // Redirect the user to the login page
         NavigationManager.NavigateTo("/login");
-        
     }
 }

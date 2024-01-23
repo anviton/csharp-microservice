@@ -32,6 +32,7 @@ builder.Services.AddScoped<RegisterService>();
 
 // Ajout d'un nouveau service
 builder.Services.AddScoped<TaskService>();
+builder.Services.AddScoped<UserService>();
 
 var app = builder.Build();
 

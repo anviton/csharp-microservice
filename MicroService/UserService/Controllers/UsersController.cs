@@ -98,11 +98,20 @@ namespace UserService.Controllers
             var user = await _context.User.FirstOrDefaultAsync(u => u.Name == userPayload.Name);
             if (user == null)
             {
+                string userRole = "Basic";
+
+                if (userPayload.Email.EndsWith("@org.com")) 
+                {
+                    userRole = "Admin";
+                }
+
                 user = new User
                 {
                     Email = userPayload.Email,
                     Name = userPayload.Name,
+                    Role = userRole
                 };
+
                 user.PasswordHash = _passwordHasher.HashPassword(user, userPayload.Pass);
 
                 _context.User.Add(user);
@@ -171,6 +180,7 @@ namespace UserService.Controllers
                 Id = user.Id,
                 Name = user.Name,
                 Email = user.Email,
+                Role = user.Role
             };
         }
     }

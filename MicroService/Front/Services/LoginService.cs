@@ -1,6 +1,5 @@
 ﻿using Front.Entities;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using System.Security.Cryptography;
 
 namespace Front.Services
 {
@@ -15,6 +14,7 @@ namespace Front.Services
             _storage = storage;
         }
 
+        // Authenticate a user by sending a POST request to the login API
         public async Task<UserDTO> AuthenticateUser(string username, string password)
         {
             UserLogin userLogin = new() { Name = username, Pass = password };
@@ -26,8 +26,7 @@ namespace Front.Services
                 result = await response.Content.ReadFromJsonAsync<JWTAndUser>();
                 await _storage.SetAsync("jwt", result.Token);
             }
-            return result.User;
+            return result == null ? null : result.User;
         }
     }
 }
-

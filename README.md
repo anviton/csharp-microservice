@@ -1,12 +1,19 @@
 # ``csharp-microservice``
 
+## Login
+### Admin
+```
+	username : orgl
+	password : 123
+```
+
 ## ``Séance 2``
 
 ### Sur le front:
 - Créer une page d'inscription - OK
-- Modifier le login pour que le front communique avec la gateway et appel la route de login OK
-- Faire que la page d'inscription appel la gateway OK
-- Faire une page pour afficher un visuel de votre second micro service (liste de tâches)
+- Modifier le login pour que le front communique avec la gateway et appel la route de login - OK
+- Faire que la page d'inscription appel la gateway - OK
+- Faire une page pour afficher un visuel de votre second micro service (liste de tâches) - OK
 
 ### Sur la gateway:
 - Créer la route register pour le user - OK
@@ -16,23 +23,27 @@
 ## ``Séance 3``
 
 ### Sur le front:
-- Récupérer le JWT lors du login et le stocker dans le local storage
-- Ajouter le token JWT aux appels HTTP autre que login / register
-- Pouvoir lister les todo de l'utilisateur connecté (EN COURS - reynalde)
-- Pouvoir supprimer un todo (EN COURS - reynalde)
-- Pouvoir mettre à jour un todo (EN COURS - reynalde)
+- Récupérer le JWT lors du login et le stocker dans le local storage - OK
+- Ajouter le token JWT aux appels HTTP autre que login / register 
+- Pouvoir lister les todo de l'utilisateur connecté - OK
+- Pouvoir supprimer un todo - OK
+- Pouvoir mettre à jour un todo - OK
 
 ### Sur la gateway:
-- Ajouter la gestion du JWT (En COURS)
-- Ajouter le JWT au swagger OK
-- Rendre certaines routes [Authorized] OK
-- Récupérer l'id de l'utilisateur sur les routes authentifiées OK 
-- Transmettre l'id au micro service todo pour ne récupérer que les données concernant notre utilisateur OK
+- Ajouter la gestion du JWT - OK
+- Ajouter le JWT au swagger - OK
+- Rendre certaines routes [Authorized] - OK
+- Récupérer l'id de l'utilisateur sur les routes authentifiées - OK 
+- Transmettre l'id au micro service todo pour ne récupérer que les données concernant notre utilisateur - OK
 
 ### Sur le micro service todo:
-- Ne renvoyer que les todo de notre utilisateur OK
+- Ne renvoyer que les todo de notre utilisateur - OK
 - Créer une classe TodoDb qui contiendra la liste des todos - OK
 - Ajouter la classe TodoDb dans le program.cs en tant que singleton - OK
 - Utiliser cette classe dans le service todo - OK
 
 Vous aurez besoin de ces packages pour utiliser le JWT - OK
+
+
+### Bonus
+- Implémentation des rôles - OK
