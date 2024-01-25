@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace GatewayService.Controllers
 {
@@ -49,6 +50,22 @@ namespace GatewayService.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserLogin model)
         {
+
+            if (string.IsNullOrWhiteSpace(model.Pass) || string.IsNullOrWhiteSpace(model.Name))
+            {
+                Console.WriteLine("Le mot de passe ne doit pas être vide.");
+                return BadRequest("Login failed");
+            }
+
+            string pattern = @"(';--)|(--)|(\bSELECT\b)|(\bINSERT\b)|(\bDELETE\b)|(\bUPDATE\b)|(\bDROP\b)|(\bEXEC(\s|\()+)|(%27)|(\bUNION\b)|(\bCREATE\b)|(\bALTER\b)|(\bGRANT\b)|(\bREVOKE\b)";
+            Regex regex = new Regex(pattern, RegexOptions.IgnoreCase);
+
+            if (regex.IsMatch(model.Pass) || regex.IsMatch(model.Name))
+            {
+                Console.WriteLine("L'entrée contient des motifs suspects d'injection SQL.");
+                return BadRequest("Login failed");
+            }
+
             // Create an HttpClient instance using the factory
             using (var client = _httpClientFactory.CreateClient())
             {
@@ -77,8 +94,24 @@ namespace GatewayService.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserRegister model)
         {
-            // Create an HttpClient instance using the factory
-            using (var client = _httpClientFactory.CreateClient())
+            if (string.IsNullOrWhiteSpace(model.Pass) || string.IsNullOrWhiteSpace(model.Name) || string.IsNullOrWhiteSpace(model.Email))
+            {
+                Console.WriteLine("Le mot de passe ne doit pas être vide.");
+                return BadRequest("User not accepted");
+            }
+
+            // Regex pour détecter des motifs simples d'injection SQL
+            string pattern = @"(';--)|(--)|(\bSELECT\b)|(\bINSERT\b)|(\bDELETE\b)|(\bUPDATE\b)|(\bDROP\b)|(\bEXEC(\s|\()+)|(%27)|(\bUNION\b)|(\bCREATE\b)|(\bALTER\b)|(\bGRANT\b)|(\bREVOKE\b)";
+            Regex regex = new Regex(pattern, RegexOptions.IgnoreCase);
+
+            if (regex.IsMatch(model.Pass) || regex.IsMatch(model.Name) || regex.IsMatch(model.Email))
+            {
+                Console.WriteLine("L'entrée contient des motifs suspects d'injection SQL.");
+                return BadRequest("User not accepted");
+            }
+
+                // Create an HttpClient instance using the factory
+                using (var client = _httpClientFactory.CreateClient())
             {
                 // Set the base address of the API you want to call
                 client.BaseAddress = new System.Uri("http://localhost:5001/");
@@ -95,7 +128,7 @@ namespace GatewayService.Controllers
                 }
                 else
                 {
-                    return BadRequest("Register failed");
+                    return BadRequest("User already created");
                 }
             }
         }

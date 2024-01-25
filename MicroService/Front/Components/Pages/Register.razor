@@ -102,13 +102,21 @@
             //var userClaim = await ((CustomAuthenticationStateProvider)authStateProvider).MarkUserAsAuthenticated(user);
 
             //NavigationManager.NavigateTo("/");
-            message = "User créé";
+            erreur = false;
+            message = "User created";
         }
         else
         {
-            Console.WriteLine("Le User existe déjà");
-            message = "Le User existe déjà";
             erreur = true;
+            if(user == 1)
+            {
+                Console.WriteLine("Le User existe déjà");
+                message = "User already created";
+            }
+            else
+            {
+                message = "User not accepted";
+            }
         }
         StateHasChanged();
         return;
