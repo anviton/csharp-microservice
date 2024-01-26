@@ -3,7 +3,7 @@
 `csharp-microservice` is a project that demonstrates the use of microservices architecture in C#. 
 It includes features like secure authentication, task management, and service-to-service communication through a gateway.
 
-<img src="https://i.ibb.co/Z16WHMx/architecture.png" alt="architecture" width="100" height="100">
+<img src="https://i.ibb.co/Z16WHMx/architecture.png" alt="architecture">
 
 ## ``Accounts``
 
