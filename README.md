@@ -29,8 +29,6 @@ In our application, there is two types of user :
 - ``Secure Authentication``: Implements JWT for secure access.
 - ``Task Management``: Allows users to manage their tasks.
 - ``Service Communication``: Uses a gateway for inter-service communication.
-
--
 -----------------------------------------------------------------------------------------------------------
 
 ## 📅 Séance 2 
@@ -65,3 +63,4 @@ In our application, there is two types of user :
 
 ## 💡 Bonus
 - Implémentation des rôles pour une gestion fine des accès. ✅
+- Persistances des tâches dans une base de données après fermeture du ``TaskService`` ✅
