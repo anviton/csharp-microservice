@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +24,7 @@ builder.Services
         {
             ClockSkew = TimeSpan.FromMinutes(600),
             ValidateLifetime = true,
+            RoleClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
             ValidateIssuerSigningKey = true,
             ValidAudience = "localhost:5000",
             ValidIssuer = "TodoProject",
@@ -58,8 +60,8 @@ builder.Services.AddSwaggerGen(option => {
     });
 });
 
-
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -73,5 +75,22 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapSwagger().RequireAuthorization();
+
+app.Use(async (context, next) =>
+{
+    var user = context.User;
+    if (user.Identity.IsAuthenticated)
+    {
+        Console.WriteLine($"User: {user.Identity.Name}");
+        var roleClaim = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+        Console.WriteLine($"Role: {roleClaim}");
+    }
+    else
+    {
+        Console.WriteLine("User is not authenticated");
+    }
+
+    await next.Invoke();
+});
 
 app.Run();

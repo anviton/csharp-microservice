@@ -1,49 +1,67 @@
-# ``csharp-microservice``
+# ``csharp-microservice`` 🌐
 
-## Login
+`csharp-microservice` is a project that demonstrates the use of microservices architecture in C#. 
+It includes features like secure authentication, task management, and service-to-service communication through a gateway.
+
+<img src="https://i.ibb.co/Z16WHMx/architecture.png" alt="architecture" width="100" height="100">
+
+## ``Accounts``
+
+In our application, there is two types of user :
+1. ``Admin`` : can delete a user 
+2. ``Basic`` : basic user (can only add/remove/update tasks)
+
 ### Admin
 ```
-	username : orgl
+	username : admin
 	password : 123
 ```
 
-## ``Séance 2``
+### Basic
 
-### Sur le front:
-- Créer une page d'inscription - OK
-- Modifier le login pour que le front communique avec la gateway et appel la route de login - OK
-- Faire que la page d'inscription appel la gateway - OK
-- Faire une page pour afficher un visuel de votre second micro service (liste de tâches) - OK
+````
+	username : user1
+	password : 123
+````
 
-### Sur la gateway:
-- Créer la route register pour le user - OK
-- Vérifier que le user / pass ne comporte que des caractères alphanumériques - OK
-- Ajouter un controller pour le second micro service qui relaie les appels - OK
+## ``Features``
 
-## ``Séance 3``
+- ``Secure Authentication``: Implements JWT for secure access.
+- ``Task Management``: Allows users to manage their tasks.
+- ``Service Communication``: Uses a gateway for inter-service communication.
 
-### Sur le front:
-- Récupérer le JWT lors du login et le stocker dans le local storage - OK
-- Ajouter le token JWT aux appels HTTP autre que login / register 
-- Pouvoir lister les todo de l'utilisateur connecté - OK
-- Pouvoir supprimer un todo - OK
-- Pouvoir mettre à jour un todo - OK
+-
+-----------------------------------------------------------------------------------------------------------
 
-### Sur la gateway:
-- Ajouter la gestion du JWT - OK
-- Ajouter le JWT au swagger - OK
-- Rendre certaines routes [Authorized] - OK
-- Récupérer l'id de l'utilisateur sur les routes authentifiées - OK 
-- Transmettre l'id au micro service todo pour ne récupérer que les données concernant notre utilisateur - OK
+## 📅 Séance 2 
 
-### Sur le micro service todo:
-- Ne renvoyer que les todo de notre utilisateur - OK
-- Créer une classe TodoDb qui contiendra la liste des todos - OK
-- Ajouter la classe TodoDb dans le program.cs en tant que singleton - OK
-- Utiliser cette classe dans le service todo - OK
+### 🖥️ Frontend
+- Création d'une page d'inscription. ✅
+- Modification du login pour intégrer la communication avec la gateway. ✅
+- Intégration de la page d'inscription avec la gateway. ✅
+- Développement d'une page pour afficher les tâches via le second microservice. ✅
 
-Vous aurez besoin de ces packages pour utiliser le JWT - OK
+### 🌉 Gateway
+- Création de la route `register` pour l'enregistrement des utilisateurs. ✅
+- Validation alphanumérique des identifiants et mots de passe. ✅
+- Ajout d'un contrôleur pour le second microservice. ✅
 
+## 📅 Séance 3
 
-### Bonus
-- Implémentation des rôles - OK
+### 🖥️ Frontend
+- Gestion du JWT lors du login et stockage dans le local storage. ✅
+- Ajout du token JWT aux appels HTTP (à l'exception de login/register).
+- Fonctionnalités pour lister, supprimer et mettre à jour les tâches. ✅
+
+### 🌉 Gateway
+- Intégration et gestion du JWT. ✅
+- Ajout du JWT dans Swagger pour faciliter les tests API. ✅
+- Sécurisation des routes avec le système d'authentification. ✅
+
+### 📝 Microservice de Todo
+- Filtre des tâches par utilisateur. ✅
+- Création d'une classe `TodoDb` pour la gestion des tâches. ✅
+- Configuration de `TodoDb` en tant que singleton dans `program.cs`. ✅
+
+## 💡 Bonus
+- Implémentation des rôles pour une gestion fine des accès. ✅

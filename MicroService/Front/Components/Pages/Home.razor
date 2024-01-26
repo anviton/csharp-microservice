@@ -2,33 +2,27 @@
 
 @inject AuthenticationStateProvider AuthStateProvider
 
-<div class="container mt-5">
+<!-- Homepage -->
+<div class="container-fluid mt-5">
     <div class="row">
-        <div class="col-lg-8 mx-auto text-center">
-            <h1 class="display-4">Welcome to Todo App Service</h1>
-            <p class="lead">
+        <div class="col-xxl-6 mx-auto text-center">
+            <h1 class="display-5 fw-bold">Todo App Service</h1>
+            <p class="lead fs-6">
                 Organize your day with our task management application.
                 Easily plan and track your daily tasks for enhanced productivity.
             </p>
+            @if (!userIsAuthenticated)
+            {
+                <a href="/register" class="btn btn-primary btn-lg px-4 me-md-2">Sign up now</a>
+            }
         </div>
     </div>
 
-    <div class="row mt-3">
-        <div class="col-lg-8 mx-auto text-center">
-            <p class="lead">
-                @if (!userIsAuthenticated)
-                {
-                    <a href="/register" class="btn btn-primary btn-lg">Sign up now</a>
-                }
-            </p>
-        </div>
-    </div>
-
-    <div class="row mt-4">
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h2 class="h5 m-0">Create Custom Task Lists</h2>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 mt-3">
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white rounded-top">
+                    <h2 class="h5 m-0">Create custom task Lists</h2>
                 </div>
                 <div class="card-body">
                     <p class="card-text">
@@ -37,9 +31,9 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-header bg-success text-white">
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-success text-white rounded-top">
                     <h2 class="h5 m-0">Track your progress</h2>
                 </div>
                 <div class="card-body">
@@ -49,51 +43,62 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="row mt-4">
-        <div class="col-lg-12">
-            <h2 class="h4">Key Features</h2>
-        </div>
-    </div>
-
-    <div class="row mt-3">
-        <div class="col-lg-4">
-            <div class="card">
-                <div class="card-header">
-                    <i class="fas fa-check-circle fa-3x text-success"></i>
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-info text-white rounded-top">
+                    <h2 class="h5 m-0">Update your tasks</h2>
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title">Organize your time</h5>
-                    <p class="card-text">
-                        Organize your tasks efficiently and keep track of your progress.
-                    </p>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="card">
-                <div class="card-header">
-                    <i class="fas fa-clock fa-3x text-primary"></i>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Time management</h5>
-                    <p class="card-text">
-                        Manage your time effectively with our task scheduling tools.
-                    </p>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="card">
-                <div class="card-header">
-                    <i class="fas fa-share fa-3x text-info"></i>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Update your tasks</h5>
                     <p class="card-text">
                         In our app, you can easily update the status of your tasks.
                     </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-lg-12">
+            <h2 class="h4">Key Features</h2>
+            <div class="row row-cols-1 row-cols-md-3 g-4 mt-3">
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header text-center">
+                            <i class="fas fa-check-circle fa-3x text-success"></i>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Organize your time</h5>
+                            <p class="card-text">
+                                Organize your tasks efficiently and keep track of your progress.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header text-center">
+                            <i class="fas fa-clock fa-3x text-primary"></i>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Time management</h5>
+                            <p class="card-text">
+                                Manage your time effectively with our task scheduling tools.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header text-center">
+                            <i class="fas fa-share fa-3x text-info"></i>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Organize your time</h5>
+                            <p class="card-text">
+                                In our app, you can easily update the status of your tasks.
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

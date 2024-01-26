@@ -1,50 +1,75 @@
 ﻿@page "/users"
 
 @inject UserService userService
+@inject HttpClient Http
+@inject IJSRuntime JSRuntime
+@inject AuthenticationStateProvider authStateProvider
 
-<h3>Users</h3>
-
-@if (users != null)
-{
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var user in users)
-            {
+<div class="container mt-5">
+    <h3>Users</h3>
+    @if (users != null && users.Any())
+    {
+        <table class="table table-striped mt-3">
+            <thead class="table-dark">
                 <tr>
-                    <td>@user.Id</td>
-                    <td>@user.Name</td>
-                    <td>@user.Email</td>
-                    <td>@user.Role</td>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Actions</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>Aucun utilisateur trouvé.</p>
-}
+            </thead>
+            <tbody>
+                @foreach (var user in users.Where(u => u.Name != currentUser.User.Identity.Name))
+                {
+                    <tr>
+                        <td>@user.Id</td>
+                        <td>@user.Name</td>
+                        <td>@user.Email</td>
+                        <td>@user.Role</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" @onclick="() => DeleteUser(user.Id)">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No users found.</p>
+    }
+</div>
 
 @code {
     private List<UserDTO> users;
+    private AuthenticationState currentUser;
 
-    // Méthode pour récupérer les tâches au chargement de la page
     protected override async Task OnInitializedAsync()
+    {
+        currentUser = await authStateProvider.GetAuthenticationStateAsync();
+
+        await LoadUsers();
+    }
+
+    private async Task LoadUsers()
     {
         try
         {
             users = await userService.GetUsersAsync();
         }
         catch (Exception ex)
-        {}
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 
+    private async Task DeleteUser(int userId)
+    {
+        var success = await userService.DeleteUserAsync(userId);
+        if (success)
+        {
+            await LoadUsers();
+        }
+    }
 }

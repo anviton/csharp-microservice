@@ -3,129 +3,72 @@
 @inject NavigationManager NavigationManager
 @inject RegisterService registerService
 
-
-<!-- Register form-->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Registration Form</title>
-    <style>
-        #conteneurForm {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        form {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-        }
-
-        input {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 16px;
-            box-sizing: border-box;
-        }
-
-        button {
-            background-color: #4caf50;
-            color: #fff;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-    </style>
-</head>
-<body>
-   <h1 class="mb-4">Register</h1>
-    <div id="conteneurForm">
-        <EditForm Model="@registerModel" OnSubmit="HandleRegister">
-            <label for="name">Name:</label>
-            <InputText @bind-Value="registerModel.UserName" required />
-
-            <label for="password">Password:</label>
-            <InputText type="password" @bind-Value="registerModel.Password" required />
-
-            <label for="email">Email:</label>
-            <InputText type="email" @bind-Value="registerModel.Email" required />
-            <button type="submit">Register</button>
-
-        </EditForm>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="card-title text-center mb-4">Register</h1>
+                    <EditForm Model="@registerModel" OnValidSubmit="HandleRegister" class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <InputText id="username" @bind-Value="registerModel.UserName" class="form-control" />
+                            <ValidationMessage For="@(() => registerModel.UserName)" class="text-danger" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <InputText id="email" @bind-Value="registerModel.Email" type="email" class="form-control" />
+                            <ValidationMessage For="@(() => registerModel.Email)" class="text-danger" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <InputText id="password" @bind-Value="registerModel.Password" type="password" class="form-control" />
+                            <ValidationMessage For="@(() => registerModel.Password)" class="text-danger" />
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-block">Register</button>
+                        </div>
+                        @if (!string.IsNullOrEmpty(message))
+                        {
+                            <div class="text-center mt-3 @GetMessageClass()">@message</div>
+                        }
+                    </EditForm>
+                </div>
+            </div>
+        </div>
     </div>
-    <br />
-    <div>
-        @if (!string.IsNullOrEmpty(message))
-        {
-            if (erreur)
-            {
-                <p class="text-danger">@message</p>
-            }
-            else
-            {
-                <p class="text-black">@message</p>
-            }
-        }
-    </div>
-
-</body>
-</html>
-
+</div>
 
 @code {
     private RegisterModel registerModel = new RegisterModel();
     private string message;
-    Boolean erreur = false;
+    private bool erreur = false;
 
     private async void HandleRegister()
     {
         int user = await registerService.RegisterUser(registerModel.UserName, registerModel.Password, registerModel.Email);
         if (user == 0)
         {
-            //var userClaim = await ((CustomAuthenticationStateProvider)authStateProvider).MarkUserAsAuthenticated(user);
-
-            //NavigationManager.NavigateTo("/");
             erreur = false;
-            message = "User created";
+            message = "User successfully created!";
         }
         else
         {
             erreur = true;
-            if(user == 1)
-            {
-                Console.WriteLine("Le User existe déjà");
-                message = "User already created";
-            }
-            else
-            {
-                message = "User not accepted";
-            }
+            message = user == 1 ? "User already exists." : "User registration failed.";
         }
         StateHasChanged();
-        return;
     }
+
+    private string GetMessageClass()
+    {
+        return erreur ? "message-error" : "message-success";
+    }
+
     private class RegisterModel
     {
         public string UserName { get; set; } = "";
         public string Password { get; set; } = "";
         public string Email { get; set; } = "";
-
     }
 }

@@ -22,7 +22,7 @@ namespace Front.Services
             await _sessionStorage.SetAsync("User", user);
             var claims = new[] {
                 new Claim(ClaimTypes.Name, user.Name),
-                new Claim(ClaimTypes.Role, "User")
+                new Claim(ClaimTypes.Role, user.Role == "Admin" ? "Admin" : "Basic")
             };
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             _currentUser = new ClaimsPrincipal(identity);

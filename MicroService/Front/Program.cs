@@ -30,7 +30,7 @@ builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStat
 builder.Services.AddScoped<LoginService>();
 builder.Services.AddScoped<RegisterService>();
 
-// Ajout d'un nouveau service
+// Add new services here
 builder.Services.AddScoped<TaskService>();
 builder.Services.AddScoped<UserService>();
 

@@ -7,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GatewayService.Controllers
 {
@@ -22,12 +23,13 @@ namespace GatewayService.Controllers
         }
 
         // Generate a JWT token with the user's ID as a claim
-        private string GenerateJwtToken(int userId)
+        private string GenerateJwtToken(UserDTO user)
         {
             var claims = new List<Claim>
             {
                 // Add a UserId field to our token with the userId as a string value
-                new Claim("UserId", userId.ToString())
+                new Claim("UserId", user.Id.ToString()),
+                new Claim(ClaimTypes.Role, user.Role == "Admin" ? "Admin" : "Basic")
             };
 
             // Create the encryption key
@@ -80,7 +82,7 @@ namespace GatewayService.Controllers
                 {
                     // Deserialize the response content if needed
                     var user = await response.Content.ReadFromJsonAsync<UserDTO>();
-                    var token = GenerateJwtToken(user.Id);
+                    var token = GenerateJwtToken(user);
                     return Ok(new JWTAndUser(user, token, user.Role));
                 }
                 else
@@ -133,6 +135,48 @@ namespace GatewayService.Controllers
             }
         }
 
+        // DELETE: api/User/{id}
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            using (var client = _httpClientFactory.CreateClient())
+            {
+                client.BaseAddress = new System.Uri("http://localhost:5001/");
+                HttpResponseMessage response = await client.DeleteAsync($"api/Users/{id}");
+
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, "Failed to delete user");
+                }
+            }
+        }
+
+
+        // GET: api/User/{id}
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetUserById(int id)
+        {
+            using (var client = _httpClientFactory.CreateClient())
+            {
+                client.BaseAddress = new System.Uri("http://localhost:5001/");
+                HttpResponseMessage response = await client.GetAsync($"api/Users/{id}");
+
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    var user = await response.Content.ReadFromJsonAsync<UserDTO>();
+                    return Ok(user);
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, "Failed to retrieve user by ID");
+                }
+            }
+        }
 
         // GET: api/User/users
         [HttpGet("users")]
@@ -141,7 +185,6 @@ namespace GatewayService.Controllers
             using (var client = _httpClientFactory.CreateClient())
             {
                 client.BaseAddress = new System.Uri("http://localhost:5001/");
-
                 HttpResponseMessage response = await client.GetAsync("api/Users");
 
                 if (response.StatusCode == HttpStatusCode.OK)

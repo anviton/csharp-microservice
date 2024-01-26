@@ -2,116 +2,91 @@
 @inject HttpClient Http
 @inject TaskService taskService
 
-<!-- Tasks page -->
-<h3>Tasks</h3>
-
-<div class="row mb-3">
-    <div class="col-md-4">
-        <div class="mb-3">
-            <label>Filter by status:</label>
-            <select class="form-select" @bind="filterStatus">
-                <option value="all">All</option>
-                <option value="completed">Completed</option>
-                <option value="incomplete">Not completed</option>
-            </select>
-            <button class="btn btn-primary btn-sm" @onclick="ApplyFilter">Apply filter</button>
-        </div>
-    </div>
-</div>
-
-@if (errorMessage != null)
-{
-    <p class="text-danger">@errorMessage</p>
-}
-else if (pagedTasks == null)
-{
-    <p><em>Loading...</em></p>
-}
-else if (pagedTasks.Count == 0)
-{
-    <p>No tasks found for this user.</p>
-}
-else
-{
-    <ul class="list-group">
-        @foreach (var task in pagedTasks)
-        {
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <div>
-                    <span>@task.Text</span>
-                    @if (task.IsDone)
-                    {
-                        <span class="badge bg-success ms-2">Completed</span>
-                    }
-                    else
-                    {
-                        <span class="badge bg-warning text-dark ms-2">Not completed</span>
-                    }
-                </div>
-                <div>
-                    <button class="btn btn-secondary btn-sm me-2" @onclick="() => UpdateTaskStatus(task)">Update Status</button>
-                    <button class="btn btn-danger btn-sm" @onclick="() => DeleteTask(task.Id)">Delete</button>
-                </div>
-            </li>
-        }
-    </ul>
-}
-
-<br />
-<br />
-
-<div class="row mb-3">
-    <div class="col-md-4">
-        <div class="input-group">
-            <input @bind="newTaskText" class="form-control" placeholder="Enter new task" />
-            <button class="btn btn-success" @onclick="AddTask">Add Task</button>
-        </div>
-    </div>
-</div>
+<!-- Task page -->
 <div class="container mt-5">
     <div class="row">
-        <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h5 class="card-title">Filter tasks</h5>
-                    <p class="card-text">Use the filter options to view tasks based on their completion status. Select "All" to see all your tasks, "Completed" to view only the finished ones, or "Not completed" to see pending tasks. Click the "Apply filter" button to update the list.</p>
-                </div>
-            </div>
-        </div>
-    </div>
+        <div class="col-md-8 mx-auto">
+            <h3 class="mb-4 text-center">My ToDo List</h3>
 
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h5 class="card-title">Your task list</h5>
-                    <p class="card-text">Below, you'll find your list of tasks. Each task is displayed with its name and a status badge. The green "Completed" badge indicates a finished task, while the yellow "Not completed" badge shows pending tasks. Easily update a task's status or delete it using the provided buttons.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6">
+            <!-- Add Task Form -->
             <div class="card mb-4">
                 <div class="card-body">
                     <h5 class="card-title">Add new task</h5>
-                    <p class="card-text">To add a new task, simply type its name in the input field and click the "Add Task" button. Your new task will be added to the list. Whether you want to stay organized, track your progress, or simply manage your daily tasks, the Tasks page makes it easy for you to do so. Get started by exploring and managing your tasks now!</p>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Enter a new task" @bind="newTaskText">
+                        <button class="btn btn-outline-success" @onclick="AddTask">Add task</button>
+                    </div>
                 </div>
             </div>
+
+            <!-- Filter Section -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Filter Tasks</h5>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label class="form-label">Filter by status:</label>
+                                <select class="form-select" @bind="filterStatus">
+                                    <option value="all">All</option>
+                                    <option value="completed">Completed</option>
+                                    <option value="incomplete">Not completed</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button class="btn btn-primary w-100" @onclick="ApplyFilter">Apply filter</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tasks Display -->
+            @if (errorMessage != null)
+            {
+                <div class="alert alert-danger">@errorMessage</div>
+            }
+            else if (pagedTasks == null)
+            {
+                <p class="text-center"><em>Loading...</em></p>
+            }
+            else if (pagedTasks.Count == 0)
+            {
+                <div class="alert alert-info">No tasks found for this user.</div>
+            }
+            else
+            {
+                <ul class="list-group">
+                    @foreach (var task in pagedTasks)
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <span>@task.Text</span>
+                            </div>
+                            <div class="ms-auto">
+                                <span class="badge @GetBadgeClass(task.IsDone)">@GetBadgeText(task.IsDone)</span>
+                                <button class="btn btn-outline-secondary btn-sm me-2" @onclick="() => UpdateTaskStatus(task)">
+                                    <i class="fas fa-sync-alt"></i> Update status
+                                </button>
+                                <button class="btn btn-outline-danger btn-sm" @onclick="() => DeleteTask(task.Id)">
+                                    <i class="fas fa-trash-alt"></i> Delete
+                                </button>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            }
         </div>
     </div>
 </div>
-
 
 @code {
     private List<TaskToDo> tasks;
     private List<TaskToDo> pagedTasks;
     private string newTaskText;
     private string errorMessage;
-    private string filterStatus = "all"; // Par défaut, afficher toutes les tâches
+    private string filterStatus = "all";
 
-    // Méthode pour récupérer les tâches au chargement de la page
     protected override async Task OnInitializedAsync()
     {
         try
@@ -128,7 +103,6 @@ else
         }
     }
 
-    // Méthode pour rafraîchir la liste des tâches
     private async Task RefreshTasks()
     {
         try
@@ -144,7 +118,6 @@ else
         }
     }
 
-    // Méthode pour mettre à jour le statut d'une tâche
     private async Task UpdateTaskStatus(TaskToDo task)
     {
         task.IsDone = !task.IsDone;
@@ -152,14 +125,12 @@ else
         await RefreshTasks();
     }
 
-    // Méthode pour supprimer une tâche
     private async Task DeleteTask(int taskId)
     {
         await taskService.DeleteTask(taskId);
         await RefreshTasks();
     }
 
-    // Méthode pour appliquer le filtre sur les tâches
     private void ApplyFilter()
     {
         if (tasks != null)
@@ -179,7 +150,16 @@ else
         }
     }
 
-    // Méthode pour ajouter une nouvelle tâche
+    private string GetBadgeClass(bool isDone)
+    {
+        return isDone ? "bg-success text-white" : "bg-warning text-dark";
+    }
+
+    private string GetBadgeText(bool isDone)
+    {
+        return isDone ? "Completed" : "Not Completed";
+    }
+
     private async Task AddTask()
     {
         if (!string.IsNullOrWhiteSpace(newTaskText))
